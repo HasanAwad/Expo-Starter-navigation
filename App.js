@@ -1,21 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import * as SecureStore from "expo-secure-store";
+//for navigation
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+//////////////////////////////
+
+import Home from "./Screens/Home";
+import Login from "./Screens/Login";
+import Achta from "./Screens/Achta";
+
+const AuthStack = createStackNavigator();
+
+const AuthStackScreen = () => (
+  <AuthStack.Navigator initialRouteName="Login">
+    <AuthStack.Screen
+      name="Login"
+      component={Login}
+      options={{
+        headerTitle: "Login",
+      }}
+    />
+
+    {/* <AuthStack.Screen name="SignUp" component={SignUp} /> */}
+  </AuthStack.Navigator>
+);
+
+const RootStack = createStackNavigator();
+
+const RootStackScreen = () => (
+  <RootStack.Navigator>
+    <RootStack.Screen
+      name="Home"
+      component={Home}
+      options={{
+        headerTitle: "Home",
+      }}
+    />
+    <RootStack.Screen
+      name="Achta"
+      component={Achta}
+      options={{
+        headerTitle: "Achta",
+      }}
+    />
+  </RootStack.Navigator>
+);
 
 export default function App() {
+  const [token, setToken] = useState("jghjgjhgjgg");
+
+  SecureStore.setItemAsync("token", "blablabla");
+
+  console.log(SecureStore.getItemAsync("token"));
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      {token ? <RootStackScreen /> : <AuthStackScreen />}
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
